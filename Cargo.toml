@@ -1,0 +1,8 @@
+[package]
+name = "openpty"
+version = "0.1.0"
+authors = ["Milkey Mouse <milkeymouse@meme.institute>"]
+edition = "2018"
+
+[dependencies]
+libc = "0.2.49"
