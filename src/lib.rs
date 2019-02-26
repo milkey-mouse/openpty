@@ -11,35 +11,39 @@ use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::io::AsRawFd;
 
 mod ioctl {
-    ioctl_write_int!(tiocsptlck, 'T', 0x31);
+    ioctl_write_ptr!(tiocsptlck, 'T', 0x31, libc::c_int);
     ioctl_read!(tiocgptn, 'T', 0x30, libc::c_uint);
     ioctl_write_ptr_bad!(tiocswinsz, libc::TIOCSWINSZ, libc::winsize);
 }
 
-pub struct OpenedPty {
-    master: File,
-    slave: File,
-    name: String,
-}
+//pub struct OpenedPty {
+//    master: File,
+//    slave: File,
+//    name: String,
+//}
 
 pub fn openpty(
     termios: Option<&libc::termios>,
     winsize: Option<&libc::winsize>,
     name: Option<String>,
-) -> Result<OpenedPty, Box<error::Error>> {
+) -> Result<(File, File, String), Box<error::Error>> {
     let master = OpenOptions::new()
-        .mode((libc::O_RDWR | libc::O_NOCTTY) as u32)
+        .read(true)
+        .write(true)
+        .custom_flags(libc::O_NOCTTY)
         .open("/dev/ptmx")?;
 
     let mut pts_number = 0;
     unsafe {
-        ioctl::tiocsptlck(master.as_raw_fd(), 0)?;
+        ioctl::tiocsptlck(master.as_raw_fd(), &mut (pts_number as libc::c_int))?;
         ioctl::tiocgptn(master.as_raw_fd(), &mut pts_number)?;
     }
 
     let name = name.unwrap_or_else(|| format!("/dev/pts/{}", pts_number));
     let slave = OpenOptions::new()
-        .mode((libc::O_RDWR | libc::O_NOCTTY) as u32)
+        .read(true)
+        .write(true)
+        .custom_flags(libc::O_NOCTTY)
         .open(&name)?;
 
     if let Some(tio) = termios {
@@ -52,9 +56,5 @@ pub fn openpty(
         }
     }
 
-    Ok(OpenedPty {
-        master,
-        slave,
-        name,
-    })
+    Ok((master, slave, name))
 }
