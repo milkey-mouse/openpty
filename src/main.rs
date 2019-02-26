@@ -10,6 +10,7 @@ fn main() {
     drop(slave); // avoid potential deadlock with read below
 
     let mut out = String::new();
-    master.read_to_string(&mut out);
+    // this will generate an I/O error because slave was closed
+    master.read_to_string(&mut out).unwrap_err();
     println!("I read {}", out);
 }
