@@ -22,6 +22,14 @@ mod ioctl {
 //    name: String,
 //}
 
+/// Creates a new pseudo terminal in /dev/pts/ and returns the name and the master / slave file
+/// descriptors.
+///
+/// # Examples
+/// ```
+/// let (master, slave, name) = openpty::openpty(None, None, None)
+///     .expect("Creating pty failed");
+/// ```
 pub fn openpty(
     termios: Option<&libc::termios>,
     winsize: Option<&libc::winsize>,
