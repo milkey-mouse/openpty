@@ -5,10 +5,9 @@ extern crate nix;
 extern crate libc;
 
 use nix::errno::Errno;
-use std::error;
+use std::error::Error;
 use std::fs::{File, OpenOptions};
-use std::os::unix::fs::OpenOptionsExt;
-use std::os::unix::io::AsRawFd;
+use std::os::unix::{fs::OpenOptionsExt, io::AsRawFd};
 
 mod ioctl {
     ioctl_write_ptr!(tiocsptlck, 'T', 0x31, libc::c_int);
@@ -26,7 +25,7 @@ pub fn openpty(
     termios: Option<&libc::termios>,
     winsize: Option<&libc::winsize>,
     name: Option<String>,
-) -> Result<(File, File, String), Box<error::Error>> {
+) -> Result<(File, File, String), Box<dyn Error>> {
     let master = OpenOptions::new()
         .read(true)
         .write(true)
