@@ -34,7 +34,7 @@ dependencies = [
 
 [[package]]
 name = "openpty"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "libc 0.2.66 (registry+https://github.com/rust-lang/crates.io-index)",
  "nix 0.16.1 (registry+https://github.com/rust-lang/crates.io-index)",
