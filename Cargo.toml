@@ -10,4 +10,4 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 libc = "0.2.66"
-nix = "0.16.1"
+nix = "0.22.1"
