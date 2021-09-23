@@ -42,7 +42,7 @@ pub fn openpty(
 
     let mut pts_number = 0;
     unsafe {
-        ioctl::tiocsptlck(master.as_raw_fd(), &mut (pts_number as libc::c_int))?;
+        ioctl::tiocsptlck(master.as_raw_fd(), &(pts_number as libc::c_int))?;
         ioctl::tiocgptn(master.as_raw_fd(), &mut pts_number)?;
     }
 
