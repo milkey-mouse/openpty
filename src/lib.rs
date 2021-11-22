@@ -15,12 +15,6 @@ mod ioctl {
     ioctl_write_ptr_bad!(tiocswinsz, libc::TIOCSWINSZ, libc::winsize);
 }
 
-//pub struct OpenedPty {
-//    master: File,
-//    slave: File,
-//    name: String,
-//}
-
 /// Creates a new pseudo terminal in /dev/pts/ and returns the name and the master / slave file
 /// descriptors.
 ///
